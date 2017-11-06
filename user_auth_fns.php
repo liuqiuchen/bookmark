@@ -79,40 +79,21 @@ function change_password($username, $old_password, $new_password) {
     }
 }
 
+function get_random_num() {
+    $total=rand(6, 13);
+    echo "total = ".$total.'<br/>';
 
+    for($i = 0;$i < $total;$i++) {
+        $arr[$i] = rand(0, 9);
+    }
+    $random_num = implode('', $arr);
+    return $random_num;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 重置密码（初始化一个密码）
+function reset_password($username) {
+    // set password for username to a random value
+    // return the new password or false on failure
+    // get a random dictionary word between 6 and 13 chars in length
+    $new_password = get_random_num();
+}
