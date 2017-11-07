@@ -80,8 +80,8 @@ function change_password($username, $old_password, $new_password) {
 }
 
 function get_random_num() {
+    // get a random dictionary word between 6 and 13 chars in length
     $total=rand(6, 13);
-    echo "total = ".$total.'<br/>';
 
     for($i = 0;$i < $total;$i++) {
         $arr[$i] = rand(0, 9);
@@ -96,4 +96,37 @@ function reset_password($username) {
     // return the new password or false on failure
     // get a random dictionary word between 6 and 13 chars in length
     $new_password = get_random_num();
+    $conn = db_connect();
+    $result = $conn->query("update user set passwd = sha1('".$new_password."')
+     where username = '".$username."'");
+    if(!$result) {
+        throw new Exception('Could not change password.'); // not changed
+    } else {
+        return $new_password; // changed successfully
+    }
 }
+
+// 通知用户新密码
+function notify_password($username, $password) {
+    // notify the user that their password has been changed
+    $conn = db_connect();
+    $result = $conn->query("select email from user where username='".$username."'");
+    if(!$result) {
+        throw new Exception('Could not find email address');
+    } else if ($result->num_rows == 0) {
+        throw new Exception('Could not find email address');
+    } else {
+        $row = $result->fetch_object();
+        $email = $row->email;
+        $from = "From: support@phpbookmark \r\n";
+        $mesg = "Your PHPBookmark password has been changed to ".$password."\r\n"
+        ."Please change it next time you log in.\r\n";
+
+        if(mail($email, 'PHPBookmark login information', $mesg, $from)) {
+            return true;
+        } else {
+            throw new Exception('Could not send email.');
+        }
+    }
+}
+
