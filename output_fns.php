@@ -7,10 +7,10 @@ function do_html_header($title) {
     <head>
         <title><?php echo $title;?></title>
         <style>
-            body {font-family: Arial, Helvetica, sans-serif; font-size:13px;}
+            body {font-family: Arial, Helvetica, sans-serif; font-size:16px;}
             li, td {
                 font-family:Arial, Helvetica, sans-serif;
-                font-size:13px;}
+                font-size:16px;}
             a { color: #000; }
         </style>
     </head>
@@ -107,6 +107,10 @@ function display_registration_form()
             </tr>
             <tr>
                 <td>Password <br>(between 6 and 16 chars):</td>
+                <td valign="top"><input type="password" name="passwd" size="16" maxsize="16"></td>
+            </tr>
+            <tr>
+                <td>Confirm Password <br>(between 6 and 16 chars):</td>
                 <td valign="top"><input type="password" name="passwd2" size="16" maxsize="16"></td>
             </tr>
             <tr>
