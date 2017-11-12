@@ -51,13 +51,17 @@ function login($username, $password) {
 
 // 检查用户是否登录
 function check_valid_user() {
+    /**
+     * check_valid_user() 不再连接数据库，但是它检查该用户是否有注册过的会话，
+     * 也就是说，该用户是否已经登录。
+     */
     if(isset($_SESSION['valid_user'])) {
-        echo 'Logged in ad '. $_SESSION['valid_user'];
+        echo 'Logged in as '. $_SESSION['valid_user'].'.';
     } else {
         // they are not logged in
         do_html_heading('Problem: ');
         echo 'You are not logged in.<br/>';
-        do_html_url('login.php', 'Login');
+        do_html_url('login_form.php', 'Login');
         do_html_footer();
         exit;
     }

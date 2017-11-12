@@ -64,7 +64,7 @@ function display_login_form()
 {
     ?>
     <p><a href="register_form.php">Not a member?</a></p>
-    <form action="member.php" method="post">
+    <form action="login_handle.php" method="post">
         <table bgcolor="#cccccc">
             <tr>
                 <td colspan="2">Members log in here:</td>
