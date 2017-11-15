@@ -9,6 +9,8 @@
  */
 
 require_once('db_fns.php');
+require './lib/phpMailer/class.phpmailer.php';
+require './lib/phpMailer/class.smtp.php';
 
 function register($username, $email, $password) {
     $conn = db_connect();
@@ -71,7 +73,7 @@ function change_password($username, $old_password, $new_password) {
     // if the old password is right
     // change their password to new_password and return true
     // else throw an exception
-    login($username, $old_password);
+    login($username, $old_password); // 调用login()来判断用户输入的旧密码是否正确。
     $conn = db_connect();
     $result = $conn->query("update user set passwd = sha1('".$new_password."') 
     where username = '".$username."'");
@@ -121,16 +123,29 @@ function notify_password($username, $password) {
         throw new Exception('Could not find email address');
     } else {
         $row = $result->fetch_object();
-        $email = $row->email;
-        $from = "From: support@phpbookmark \r\n";
+        $address = $row->email;
+        $from = "From: bookmarkSupport@example.com \r\n";
         $mesg = "Your PHPBookmark password has been changed to ".$password."\r\n"
-        ."Please change it next time you log in.\r\n";
+            ."Please change it next time you log in.\r\n";
+        $mail = new PHPMailer(); //建立邮件发送类
+        $mail->IsSMTP(); // 使用SMTP方式发送
+        $mail->CharSet ="UTF-8";//设置编码，否则发送中文乱码
+        $mail->Host = "smtp.163.com"; // 您的企业邮局域名
+        $mail->SMTPAuth = true; // 启用SMTP验证功能
+        $mail->Username = "asinaqq@163.com"; // 邮局用户名(请填写完整的email地址)
+        $mail->Password = "87794055dsdsfsd"; // 邮局密码，是发件人163账号的smtp授权码
 
-        if(mail($email, 'PHPBookmark login information', $mesg, $from)) {
-            return true;
+        $mail->From = "asinaqq@163.com"; //邮件发送者email地址
+        $mail->FromName = "asinaqq";
+        $mail->AddAddress($address);//收件人地址，可以替换成任何想要接收邮件的email信箱,格式是AddAddress("收件人email","收件人姓名")
+        $mail->Subject = $from; //邮件标题
+        $mail->Body = $mesg; //邮件内容
+        //$mail->AltBody = "This is the body in plain text for non-HTML mail clients"; //附加信息，可以省略
+
+        if(!$mail->Send()) {
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
         } else {
-            throw new Exception('Could not send email.');
+            return true;
         }
     }
 }
-
