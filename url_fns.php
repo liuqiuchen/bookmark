@@ -51,32 +51,32 @@ function delete_bm($user, $url) {
     return true;
 }
 
-function recommend_urls($valid_user, $popularity = 1) {
+function recommend_urls($valid_user) {
     /**
      * 我们将给人们提供半智能的建议。如果他们有一个与其他用户相同的URL，
      * 他们可能会喜欢这些人喜欢的其他网址。
      */
     $conn = db_connect();
 
-    $query = "select bm_URL from bookmark
-    where username in
-    (select distinct(b2.username)
-    from bookmark b1, bookmark b2
-    where b1.username='".$valid_user."'
-    and b1.username != b2.username
-    and b1.bm_URL = b2.bm_URL
-    and bm_URL not in
-    (select bm_URL from bookmark
-    where username='".$valid_user."'
-    group by bm_url
-    having count(bm_URL)>".$popularity."))";
+    $query = "select bm_URL
+	        from bookmark
+	        where username in
+	   	    (select distinct(b2.username)
+            from bookmark b1, bookmark b2
+		    where b1.username='".$valid_user."'
+               and b1.username != b2.username
+               and b1.bm_URL = b2.bm_URL)
+	           and bm_URL not in
+ 		       (select bm_URL
+				   from bookmark
+				   where username='".$valid_user."')";
 
     if(!($result = $conn->query($query))) {
-        throw new Exception('Could not find any bookmarks to recommend');
+        throw new Exception('1. Could not find any bookmarks to recommend');
     }
 
     if($result->num_rows == 0) {
-        throw new Exception('Could not find any bookmarks to recommend');
+        throw new Exception('2. Could not find any bookmarks to recommend');
     }
 
     $urls = array();

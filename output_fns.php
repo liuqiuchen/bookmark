@@ -130,6 +130,7 @@ function display_user_urls($url_array)
     $bm_table = true;
     ?>
     <br>
+    <!-- 提交到delete_bms.php -->
     <form name="bm_table" action="delete_bms.php" method="post">
         <table width="300" cellpadding="2" cellspacing="0">
             <?php
@@ -189,7 +190,7 @@ function display_add_bm_form() {
         <table width="250" cellpadding="2" cellspacing="0" bgcolor="#cccccc">
             <tr>
                 <td>New BM:</td>
-                <td><input type="text" name="new_url" value="http://" size="30" maxlength="255"></td>
+                <td><input type="text" name="new_url" value="http://" size="50" maxlength="255"></td>
             </tr>
             <tr>
                 <td colspan="2" align="center">

@@ -1,5 +1,5 @@
 <?php
-
+// 检查用户是否完全填写表单
 function filled_out($form_vars) {
     foreach($form_vars as $key => $value) {
         if(!isset($key) || ($value == '')) {
